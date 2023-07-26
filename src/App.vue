@@ -4,7 +4,7 @@ import HelloWorld from "./components/HelloWorld.vue";
 </script>
 
 <template>
-  <nav class="navbar navbar-light bg-light">
+  <nav class="navbar navbar-dark bg-dark">
     <div class="container">
       <RouterLink class="navbar-brand" to="/">
         <img
@@ -25,14 +25,22 @@ import HelloWorld from "./components/HelloWorld.vue";
         >
         <RouterLink
           active-class="active"
-          class="btn btn-outline-primary"
+          class="btn btn-outline-primary me-2"
           to="/pokemons"
           >Pokemons</RouterLink
         >
+
+        <RouterLink
+          to="/favorites"
+          class="btn btn-outline-primary bg-light"
+          active-class="active"
+        >
+          Favorites
+        </RouterLink>
       </div>
     </div>
   </nav>
-  <div class="container">
+  <div class="container text-center">
     <RouterView />
   </div>
 </template>

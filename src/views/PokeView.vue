@@ -1,39 +1,37 @@
 <script setup>
-import axios from "axios";
+import { useGetData } from "@/composables/getData";
 import { useRoute, useRouter } from "vue-router";
-import { ref } from "vue";
+import { useFavoritesStore } from "@/store/favorites";
 
 const route = useRoute();
 const router = useRouter();
+const useFavorites = useFavoritesStore();
+const { add, findPoke } = useFavorites;
 
-const poke = ref({});
+const { getData, data, loading, error } = useGetData();
 
 const back = () => {
   router.push("/pokemons");
 };
 
-const getData = async () => {
-  try {
-    const { data } = await axios.get(
-      `https://pokeapi.co/api/v2/pokemon/${route.params.name}`
-    );
-
-    poke.value = data;
-    console.log(poke.value);
-  } catch (error) {
-    console.log(error);
-    poke.value = null;
-  }
-};
-getData();
+getData(`https://pokeapi.co/api/v2/pokemon/${route.params.name}`);
 </script>
 
 <template>
-  <div v-if="poke">
-    <img :src="poke.sprites?.front_default" alt="/" />
-    <img :src="poke.sprites?.back_default" alt="/" />
+  <h1 v-if="loading">Loading ...</h1>
+  <div class="alert alert-danger mt-2" v-if="error">Error: {{ error }}</div>
+  <div v-if="data">
+    <img :src="data.sprites?.front_default" alt="/" />
+    <img :src="data.sprites?.back_default" alt="/" />
     <h1>Poke name: {{ $route.params.name }}</h1>
+    <button
+      class="btn btn-outline-primary"
+      @click="add(data)"
+      :disabled="findPoke(data.name)"
+    >
+      Add to Favorites
+    </button>
   </div>
-  <h1 v-else>Pokemon no existe</h1>
-  <button class="btn btn-outline-primary" @click="back">go back</button>
+
+  <button class="btn btn-outline-primary mt-2" @click="back">go back</button>
 </template>
